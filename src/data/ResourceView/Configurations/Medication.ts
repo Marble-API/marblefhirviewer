@@ -1,7 +1,8 @@
 import {
+  buildParagraphList,
   getAllCodeAsLinks,
   getAllCodesAsString,
-  getAllDisplayAsParagraphs,
+  getAllDisplay,
 } from "../../../functions/FhirFunctions";
 import { TableColumnConfig } from "../../../interfaces";
 
@@ -9,12 +10,12 @@ const Medication: Array<TableColumnConfig> = [
   {
     label: "Codes",
     getValue: (r) => getAllCodesAsString(r.code),
-    renderer: (r) => getAllCodeAsLinks(r.code),
+    renderer: (r) => buildParagraphList(getAllCodeAsLinks(r.code)),
   },
   {
     label: "Description",
     getValue: (r) => getAllCodesAsString(r.code),
-    renderer: (r) => getAllDisplayAsParagraphs(r.code),
+    renderer: (r) => buildParagraphList(getAllDisplay(r.code)),
   },
 ];
 

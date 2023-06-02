@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import SystemCodes from "../data/Shared/SystemCodes";
 import SystemCodesUrl from "../data/Shared/SystemCodesUrl";
 import UseEnum from "../enums/UseEnum";
@@ -151,9 +152,9 @@ export const getReferenceLink = (
 
   if (matchingResource) {
     return (
-      <a href={`/Resources/${resourceType}#${resourceId}`}>
+      <Link to={`/Resources/${resourceType}#${resourceId}`}>
         {resourceType}/{resourceId}
-      </a>
+      </Link>
     );
   }
 
@@ -174,7 +175,7 @@ export const getIdentifierArray = (identifiers: Array<Identifier>) => {
             identifierValue = identifierValue.identifier;
           }
 
-          return <p>{getIdentifierAsText(identifierValue)}</p>;
+          return getIdentifierAsText(identifierValue);
         })}
       </>
     );
@@ -208,26 +209,28 @@ export const getFirstDisplayAsString = (code: CodeableConcept) => {
   return null;
 };
 
-export const getAllDisplayAsParagraphs = (code: CodeableConcept) => {
-  const items: JSX.Element[] = [];
+export const getAllDisplay = (code: CodeableConcept) => {
+  const items: Array<JSX.Element | string> = [];
   if (code.text && code.text.trim() !== "") {
-    items.push(<p>{code.text}</p>);
+    items.push(code.text);
   }
 
   code.coding
     .filter((f) => f.display?.trim() !== "")
-    .forEach((f) => items.push(<p>{f.display}</p>));
+    .forEach((f) => {
+      if (f.display) {
+        items.push(f.display);
+      }
+    });
 
-  return <>{items}</>;
+  return items;
 };
 
 export const getAllCodesAsString = (
   code: CodeableConcept,
-  separator = ", ",
   includeDisplay: boolean = false
 ) => {
-  const codes = code.coding.map((m) => getCodeLabel(m, includeDisplay));
-  return codes.join(separator);
+  return code.coding.map((m) => getCodeLabel(m, includeDisplay));
 };
 
 export const getAllCodeAsLinks = (
@@ -239,9 +242,21 @@ export const getAllCodeAsLinks = (
     const label = getCodeLabel(m, includeDisplay);
     const hasWebsite = SystemCodesUrl.hasOwnProperty(system);
     if (hasWebsite) {
-      return <p>{buildURL(`${SystemCodesUrl[system]}${m.code}`, label)}</p>;
+      return buildURL(`${SystemCodesUrl[system]}${m.code}`, label);
     }
-    return <p>{label}</p>;
+    return label;
   });
-  return <>{codeLinks}</>;
+  return codeLinks;
 };
+
+export const buildParagraphList = (
+  items: Array<JSX.Element | string | null | undefined>
+) => (
+  <>
+    {items
+      .filter((f) => !!f)
+      .map((m) => (
+        <p>{m}</p>
+      ))}
+  </>
+);

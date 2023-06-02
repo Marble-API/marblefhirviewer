@@ -1,4 +1,5 @@
 import {
+  buildParagraphList,
   formatDate,
   getAllCodeAsLinks,
   getAllCodesAsString,
@@ -18,7 +19,7 @@ const Observation: Array<TableColumnConfig> = [
   {
     label: "Codes",
     getValue: (r) => getAllCodesAsString(r.code),
-    renderer: (r) => getAllCodeAsLinks(r.code),
+    renderer: (r) => buildParagraphList(getAllCodeAsLinks(r.code)),
   },
   {
     label: "Value",

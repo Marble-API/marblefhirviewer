@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ResourceTable } from "../../components";
 import { FhirContext } from "../../contexts/FhirContext";
 import { ListBox } from "primereact/listbox";
@@ -18,8 +18,11 @@ const ResourceViewContainer = ({
 }: ResourceViewContainerProps) => {
   const { fhirResources } = useContext(FhirContext);
   const { resourceType } = useParams();
+  const { hash } = useLocation();
   const navigate = useNavigate();
   const [resourceList, setResourceList] = useState<Array<string>>([]);
+
+  const resourceId = hash?.slice(1);
 
   useEffect(() => {
     const items: Array<string> = [];
@@ -53,7 +56,9 @@ const ResourceViewContainer = ({
               DefaultTablesColumnsConfig
             }
             resources={fhirResources.filter(
-              (f) => f.resourceType === resourceType
+              (f) =>
+                f.resourceType === resourceType &&
+                (resourceId === "" || f.id === resourceId)
             )}
             allResources={fhirResources}
             onDetailViewClick={onOpenDetailViewClick}

@@ -20,7 +20,7 @@ export { default as Medication } from "./Medication";
 export { default as MedicationStatement } from "./MedicationStatement";
 export { default as Observation } from "./Observation";
 // export { default as OperationOutcome } from "./OperationOutcome";
-// export { default as Organization } from "./Organization";
+export { default as Organization } from "./Organization";
 // export { default as Practitioner } from "./Practitioner";
 // export { default as Procedure } from "./Procedure";
 // export { default as Provenance } from "./Provenance";
