@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ResourceTable } from "../../components";
 import { FhirContext } from "../../contexts/FhirContext";
 import { ListBox } from "primereact/listbox";
@@ -17,11 +17,9 @@ const ResourceViewContainer = ({
   onOpenDetailViewClick,
 }: ResourceViewContainerProps) => {
   const { fhirResources } = useContext(FhirContext);
-  const { hash } = useLocation();
+  const { resourceType } = useParams();
   const navigate = useNavigate();
   const [resourceList, setResourceList] = useState<Array<string>>([]);
-
-  let resourceType = hash?.slice(1);
 
   useEffect(() => {
     const items: Array<string> = [];
@@ -42,21 +40,25 @@ const ResourceViewContainer = ({
         <ListBox
           value={resourceType}
           options={resourceList}
-          onChange={(e) => navigate(`#${e.value}`)}
+          onChange={(e) => navigate(`/Resources/${e.value}`)}
         />
       </div>
       <div className="viewer-content">
-        <ResourceTable
-          columnsConfig={
-            ResourceTablesColumnsConfig[resourceType] ??
-            DefaultTablesColumnsConfig
-          }
-          resources={fhirResources.filter(
-            (f) => f.resourceType === resourceType
-          )}
-          allResources={fhirResources}
-          onDetailViewClick={onOpenDetailViewClick}
-        />
+        {!resourceType ||
+          (resourceType === "" && <p>Please select a Resource Type</p>)}
+        {resourceType && resourceType !== "" && (
+          <ResourceTable
+            columnsConfig={
+              ResourceTablesColumnsConfig[resourceType] ??
+              DefaultTablesColumnsConfig
+            }
+            resources={fhirResources.filter(
+              (f) => f.resourceType === resourceType
+            )}
+            allResources={fhirResources}
+            onDetailViewClick={onOpenDetailViewClick}
+          />
+        )}
       </div>
     </div>
   );

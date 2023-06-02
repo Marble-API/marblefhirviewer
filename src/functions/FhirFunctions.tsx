@@ -1,22 +1,50 @@
 import SystemCodes from "../data/Shared/SystemCodes";
 import SystemCodesUrl from "../data/Shared/SystemCodesUrl";
-import { CodeableConceptType } from "../enums/CodeableConceptType";
 import UseEnum from "../enums/UseEnum";
 import {
   Address,
   CodeableConcept,
+  CodeableConceptCode,
+  FhirResource,
   HumanName,
   Identifier,
   Money,
   Period,
   Quantity,
   Ratio,
+  Reference,
 } from "../interfaces";
+
+const getCodeLabel = (
+  code: CodeableConceptCode,
+  includeDisplay: boolean = false
+) =>
+  `${getSystem(code.system)}: ${code.code ?? "N/A"}${
+    includeDisplay && code.display ? ` (${code.display})` : ""
+  }`.trim();
 
 export const formatDate = (date: string | undefined) => {
   if (!date) return undefined;
   const newDate = new Date(date);
   return newDate.toISOString().split("T")?.[0];
+};
+
+const getPeriod = (period?: Period) => {
+  let periodString: string | undefined = undefined;
+
+  if (!period) return periodString;
+
+  if (period.start) {
+    periodString = formatDate(period.start);
+  }
+
+  if (period.end) {
+    periodString = periodString
+      ? periodString + " to " + formatDate(period.end)
+      : formatDate(period.end);
+  }
+
+  return periodString;
 };
 
 export const getHumanName = (
@@ -98,132 +126,44 @@ export const getSystem = (system: string | undefined) => {
   return SystemCodes[system ?? ""] ?? system;
 };
 
-export const getCodeLink = (isLink: boolean, array: any[], code: string) => {
-  const codeLink = isLink
-    ? Object.entries(SystemCodesUrl).find((codeLink) =>
-        array.includes(codeLink[1])
-      )
-    : null;
-
-  return codeLink ? `${codeLink[0]}${code}` : codeLink;
-};
-
 export const buildURL = (href: string, text: string) => (
   <a className="link" href={href} target="_blank" rel="noreferrer">
-    ${text}
+    {text}
   </a>
 );
 
-export const getReferenceText = (dataRow: any, resources: any[]) => {
-  let referenceText: string = "";
-  const display: string = dataRow.display;
-  const stringArray: Array<string> = dataRow.reference?.split("/");
-  const resourceExists = resources.find((f) => f.id === stringArray?.[1]);
-  const text = dataRow.reference ?? "";
-  referenceText += resourceExists
-    ? `<a href="#${stringArray?.[1]}">${text}</a>\n`
-    : `${display && !display.startsWith("undefined") ? display : text}\n`;
-  return referenceText;
-};
-
-export const getCode = (
-  code: CodeableConcept,
-  type: CodeableConceptType,
-  isLink: boolean = false
+export const getReferenceLink = (
+  reference: Reference,
+  allResources: FhirResource[]
 ) => {
-  let codingText: string | undefined = undefined;
+  const referenceParts = reference.reference?.split("/");
 
-  if (code) {
-    if (
-      code.text &&
-      (type === CodeableConceptType.Text || type === CodeableConceptType.Full)
-    ) {
-      codingText = `${code.text} \n`;
-    }
-
-    if (code.coding && Array.isArray(code.coding)) {
-      for (const coding of code.coding) {
-        const stringArray: Array<string | undefined> = [
-          type !== CodeableConceptType.Code ? coding.display : "",
-          type !== CodeableConceptType.Text ? getSystem(coding.system) : "",
-          type !== CodeableConceptType.Text ? coding.code : "",
-        ];
-        if (type === CodeableConceptType.Text && codingText) {
-          break;
-        }
-        codingText = codingText ?? "";
-
-        const formatedCode = `${stringArray.filter((f) => f).join(": ")}\n`;
-        const code = getCodeLink(isLink, stringArray, coding.code ?? "");
-        if (isLink && code) {
-          codingText += buildURL(code, formatedCode);
-        } else {
-          codingText += formatedCode;
-        }
-      }
-    }
+  if (!referenceParts || referenceParts.length < 2) {
+    return `${reference.reference} ${reference.display}`;
   }
 
-  return codingText;
-};
+  const resourceType = referenceParts[referenceParts?.length - 2];
+  const resourceId = referenceParts[referenceParts?.length - 1];
+  const matchingResource = allResources.find(
+    // eslint-disable-next-line eqeqeq
+    (f) => f.resourceType === resourceType && f.id == resourceId
+  );
 
-export const getCodeArray = (
-  codeableConcepts: Array<CodeableConcept>,
-  type: CodeableConceptType,
-  isLink: boolean = false
-) => {
-  let codingText: string | undefined = undefined;
-
-  if (codeableConcepts && codeableConcepts.length > 0) {
-    codingText = "";
-    codeableConcepts.forEach((element: any) => {
-      codingText += getCode(element, type, isLink) ?? "";
-    });
+  if (matchingResource) {
+    return (
+      <a href={`/Resources/${resourceType}#${resourceId}`}>
+        {resourceType}/{resourceId}
+      </a>
+    );
   }
 
-  return codingText;
+  return `${reference.reference} ${reference.display}`;
 };
 
-export const getIdentifier = (
-  identifier: Identifier,
-  isLink: boolean = false
-) => {
-  let identifierText: JSX.Element | string | undefined = undefined;
+export const getIdentifierAsText = (identifier: Identifier) =>
+  `${getSystem(identifier.system)}: ${identifier.value ?? "N/A"}`;
 
-  if (identifier) {
-    if (identifier.type) {
-      identifierText = getCode(
-        identifier.type,
-        CodeableConceptType.Full,
-        isLink
-      );
-    } else if (isLink) {
-      const code = getCodeLink(
-        isLink,
-        [getSystem(identifier.system)],
-        identifier.value ?? ""
-      );
-
-      if (code) {
-        identifierText = buildURL(
-          code,
-          `${getSystem(identifier.system)}:${identifier.value}`
-        );
-      }
-    } else if (identifier.system && identifier.value) {
-      identifierText = `${getSystem(identifier.system)}: ${identifier.value}`;
-    } else if (identifier.value) {
-      identifierText = identifier.value;
-    }
-  }
-
-  return identifierText;
-};
-
-export const getIdentifierArray = (
-  identifiers: Array<Identifier>,
-  isLink: boolean = false
-) => {
+export const getIdentifierArray = (identifiers: Array<Identifier>) => {
   if (identifiers && Array.isArray(identifiers)) {
     return (
       <>
@@ -234,7 +174,7 @@ export const getIdentifierArray = (
             identifierValue = identifierValue.identifier;
           }
 
-          return <p>{getIdentifier(identifierValue, isLink) ?? ""}</p>;
+          return <p>{getIdentifierAsText(identifierValue)}</p>;
         })}
       </>
     );
@@ -246,7 +186,7 @@ export const getIdentifierArray = (
 export const getValue = (value: any) => {
   return (
     value?.valueString ??
-    getCodeText(value) ??
+    getFirstDisplayAsString(value) ??
     value?.valueBoolean ??
     value?.valueInteger ??
     getPeriod(value?.valuePeriod) ??
@@ -256,7 +196,7 @@ export const getValue = (value: any) => {
   );
 };
 
-export const getCodeText = (code: CodeableConcept) => {
+export const getFirstDisplayAsString = (code: CodeableConcept) => {
   if (code.text && code.text.trim() !== "") {
     return code.text;
   }
@@ -268,46 +208,40 @@ export const getCodeText = (code: CodeableConcept) => {
   return null;
 };
 
-export const getCodes = (code: CodeableConcept, separator = ", ") => {
-  const codes = code.coding.map((m) => `${getSystem(m.system)}: ${m.code}`);
+export const getAllDisplayAsParagraphs = (code: CodeableConcept) => {
+  const items: JSX.Element[] = [];
+  if (code.text && code.text.trim() !== "") {
+    items.push(<p>{code.text}</p>);
+  }
+
+  code.coding
+    .filter((f) => f.display?.trim() !== "")
+    .forEach((f) => items.push(<p>{f.display}</p>));
+
+  return <>{items}</>;
+};
+
+export const getAllCodesAsString = (
+  code: CodeableConcept,
+  separator = ", ",
+  includeDisplay: boolean = false
+) => {
+  const codes = code.coding.map((m) => getCodeLabel(m, includeDisplay));
   return codes.join(separator);
 };
 
-export const getCodeLinks = (code: CodeableConcept) => {
+export const getAllCodeAsLinks = (
+  code: CodeableConcept,
+  includeDisplay: boolean = false
+) => {
   const codeLinks = code.coding.map((m) => {
     const system = getSystem(m.system);
-    const label = `${getSystem(m.system)}: ${m.code}`;
+    const label = getCodeLabel(m, includeDisplay);
     const hasWebsite = SystemCodesUrl.hasOwnProperty(system);
     if (hasWebsite) {
-      return (
-        <a
-          href={`${SystemCodesUrl[system]}${m.code}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          {label}
-        </a>
-      );
+      return <p>{buildURL(`${SystemCodesUrl[system]}${m.code}`, label)}</p>;
     }
     return <p>{label}</p>;
   });
   return <>{codeLinks}</>;
-};
-
-const getPeriod = (period?: Period) => {
-  let periodString: string | undefined = undefined;
-
-  if (!period) return periodString;
-
-  if (period.start) {
-    periodString = formatDate(period.start);
-  }
-
-  if (period.end) {
-    periodString = periodString
-      ? periodString + " to " + formatDate(period.end)
-      : formatDate(period.end);
-  }
-
-  return periodString;
 };

@@ -53,7 +53,7 @@ const App = () => {
 
                 <Routes>
                   <Route
-                    path="/Resources/*"
+                    path="/Resources/:resourceType?"
                     element={
                       <ResourceViewContainer
                         onOpenDetailViewClick={onOpenDetailViewClickHandler}

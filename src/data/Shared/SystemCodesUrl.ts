@@ -11,6 +11,7 @@ const SystemCodesUrl: { [key: string]: string } = {
   [CodeEnum.icd10]: "https://icdlist.com/?t=icd10&s=",
   [CodeEnum.cvx]:
     "https://phinvads.cdc.gov/vads/ViewCodeSystemConcept.action?oid=2.16.840.1.113883.12.292&code=",
+  [CodeEnum.rxNorm]: "https://ndclist.com/rxnorm/rxcui/",
 };
 
 export default SystemCodesUrl;

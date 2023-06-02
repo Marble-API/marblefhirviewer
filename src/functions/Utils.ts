@@ -164,3 +164,14 @@ export const getCodeCategory = (
     ? genericMapping[mapping]
     : "Other";
 };
+
+export const isOnlyNumbers = (value: string) => {
+  const regexOnlyNumbers = /^\d+$/;
+  const regexp = new RegExp(regexOnlyNumbers);
+  return regexp.test(value);
+};
+
+export const camelCaseToTitleCase = (text: string) => {
+  const result = text.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};

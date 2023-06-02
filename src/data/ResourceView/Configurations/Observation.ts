@@ -1,8 +1,7 @@
 import {
   formatDate,
-  getCodeLinks,
-  getCodeText,
-  getCodes,
+  getAllCodeAsLinks,
+  getAllCodesAsString,
   getValue,
 } from "../../../functions/FhirFunctions";
 import { TableColumnConfig } from "../../../interfaces";
@@ -14,12 +13,12 @@ const Observation: Array<TableColumnConfig> = [
   },
   {
     label: "Name",
-    getValue: (r) => getCodeText(r.code),
+    getValue: (r) => getAllCodesAsString(r.code),
   },
   {
     label: "Codes",
-    getValue: (r) => getCodes(r.code),
-    renderer: (r) => getCodeLinks(r.code),
+    getValue: (r) => getAllCodesAsString(r.code),
+    renderer: (r) => getAllCodeAsLinks(r.code),
   },
   {
     label: "Value",

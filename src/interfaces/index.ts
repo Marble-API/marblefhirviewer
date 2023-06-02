@@ -11,3 +11,4 @@ export type { default as Quantity } from "./Quantity";
 export type { default as Ratio } from "./Ratio";
 export type { default as TableColumnConfig } from "./TableColumnConfig";
 export type { default as FhirResource } from "./FhirResource";
+export type { default as Reference } from "./Reference";

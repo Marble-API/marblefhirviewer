@@ -13,11 +13,11 @@
 // export { default as Goal } from "./Goal";
 // export { default as Immunization } from "./Immunization";
 // export { default as Location } from "./Location";
-// export { default as Medication } from "./Medication";
+export { default as Medication } from "./Medication";
 // export { default as MedicationDispense } from "./MedicationDispense";
 // export { default as MedicationOrder } from "./MedicationOrder";
 // export { default as MedicationRequest } from "./MedicationRequest";
-// export { default as MedicationStatement } from "./MedicationStatement";
+export { default as MedicationStatement } from "./MedicationStatement";
 export { default as Observation } from "./Observation";
 // export { default as OperationOutcome } from "./OperationOutcome";
 // export { default as Organization } from "./Organization";

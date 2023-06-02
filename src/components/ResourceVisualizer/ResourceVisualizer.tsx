@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { CodeableConceptType } from "../../enums/CodeableConceptType";
 import {
-  getCode,
+  getAllCodeAsLinks,
+  getFirstDisplayAsString,
   getIdentifierArray,
-  getReferenceText,
+  getReferenceLink,
 } from "../../functions/FhirFunctions";
 import GoogleMapsAddressLink from "../../functions/GoogleMapsAddressLink";
 import { CodeableConcept, Identifier } from "../../interfaces";
 import "./ResourceVisualizer.scss";
+import { camelCaseToTitleCase, isOnlyNumbers } from "../../functions/Utils";
 
 interface ResourceVisualizerProps {
   selectedResource: string;
@@ -22,28 +23,6 @@ const ResourceVisualizer = ({
 }: ResourceVisualizerProps) => {
   const DateColumns = ["birthDate", "lastUpdated", "effectiveDateTime"];
   const [minimizedObjects, setMinimizedObjects] = useState<Array<string>>([]);
-
-  const isOnlyNumbers = (value: string) => {
-    const regexOnlyNumbers = /^\d+$/;
-    const regexp = new RegExp(regexOnlyNumbers);
-    return regexp.test(value);
-  };
-
-  const camelCaseToTitleCase = (text: string) => {
-    const result = text.replace(/([A-Z])/g, " $1");
-    return result.charAt(0).toUpperCase() + result.slice(1);
-  };
-
-  const getClassName = (key: string, value: any, type: string) => {
-    var valueType =
-      typeof value == "object"
-        ? isOnlyNumbers(key)
-          ? "item"
-          : "object"
-        : "property";
-
-    return `${valueType}${type}`;
-  };
 
   const minimize = (componentId: string) => {
     if (minimizedObjects.includes(componentId)) {
@@ -131,19 +110,11 @@ const ResourceVisualizer = ({
   };
 
   const renderCoding = (code: CodeableConcept) => {
-    const link = getCode(code, CodeableConceptType.Code, true) as string;
-    const text = getCode(code, CodeableConceptType.Text, true);
-
     return (
-      <div className="codingContainer">
-        <div
-          className="codingLink"
-          dangerouslySetInnerHTML={{
-            __html: link,
-          }}
-        />
-        <div className="codingText">{`- ${text}`}</div>
-      </div>
+      <>
+        <div>{getFirstDisplayAsString(code)}</div>
+        <div>{getAllCodeAsLinks(code, true)}</div>
+      </>
     );
   };
 
@@ -157,7 +128,7 @@ const ResourceVisualizer = ({
             href={`https://www.hl7.org/fhir/${resourceType.toLowerCase()}.html`}
             rel="noreferrer"
           >
-            ${camelCaseToTitleCase(resourceType)}
+            {camelCaseToTitleCase(resourceType)}
             <span></span>
           </a>
         </div>
@@ -166,24 +137,13 @@ const ResourceVisualizer = ({
   };
 
   const renderReference = (reference: any) => {
-    const referenceLink = getReferenceText(reference, resources);
-    const id: string = reference.reference?.split("/")?.[1];
+    const referenceLink = getReferenceLink(reference, resources);
 
-    return (
-      <div className="referenceContainer">
-        <div
-          className="referenceValue"
-          dangerouslySetInnerHTML={{
-            __html: referenceLink,
-          }}
-          onClick={() => onResourceClick(id)}
-        />
-      </div>
-    );
+    return <div className="referenceContainer">{referenceLink}</div>;
   };
 
   const renderIdentifier = (identifiers: Array<Identifier>) => {
-    const identifiersLink = getIdentifierArray(identifiers, true);
+    const identifiersLink = getIdentifierArray(identifiers);
 
     if (!identifiersLink) {
       return;
@@ -224,6 +184,17 @@ const ResourceVisualizer = ({
   return (
     <div className="resource">{renderObject(JSON.parse(selectedResource))}</div>
   );
+};
+
+const getClassName = (key: string, value: any, type: string) => {
+  var valueType =
+    typeof value == "object"
+      ? isOnlyNumbers(key)
+        ? "item"
+        : "object"
+      : "property";
+
+  return `${valueType}${type}`;
 };
 
 export default ResourceVisualizer;
