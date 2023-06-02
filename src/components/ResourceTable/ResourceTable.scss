@@ -1,0 +1,39 @@
+@import "../../variables.scss";
+
+
+.resource-table {
+  .table-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 0 18px 15px;
+    gap: 10px;
+
+    .pull-left {
+      margin-right: auto;
+    }
+
+    button {
+      color: #fff;
+      background: $dark-green;
+      border-radius: 6px;
+      text-transform: capitalize;
+    }
+  }
+
+  .link,
+  .link:hover,
+  .link:visited,
+  .link:focus {
+    @extend %link-button;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    white-space: initial;
+
+    &.margin-fix {
+      margin: 0;
+    }
+  }
+
+}

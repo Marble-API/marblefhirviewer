@@ -1,0 +1,95 @@
+@import "../../variables.scss";
+
+.resource {
+  padding: 15px;
+
+  a {
+    color: $dark-green;
+  }
+
+  // Property
+  .propertyContainer {
+    display: flex;
+
+    .propertyTitle {
+      color: $black;
+      font-weight: 600;
+      margin-right: 2px;
+    }
+
+    .propertyValue {
+      color: $black;
+    }
+  }
+
+  // Object
+  .objectContainer {
+    display: block;
+    margin: 20px 0;
+
+    .objectContainer {
+      display: block;
+      margin: 5px 0;
+    }
+
+    .objectTitle {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      background-color: $primary-background;
+      color: $white;
+      font-weight: 500;
+
+      .minimizeObject {
+        margin-right: 5px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+
+    .objectValue {
+      display: block;
+      margin-top: 5px;
+      padding-left: 15px;
+      border-left: $primary-background solid 3px;
+      overflow: hidden;
+    }
+  }
+
+  .minimized {
+    max-height: 0px;
+  }
+
+  // Array
+  .itemContainer {
+    .itemTitle {
+      display: none;
+    }
+
+    .itemValue {
+      border-top: $primary-background solid 2px;
+    }
+
+    .key-0 {
+      border-top: 0px;
+    }
+  }
+
+  // Coding
+  .codingContainer {
+    display: flex;
+
+    .codingLink {
+      display: block;
+      margin-right: 5px;
+
+      a {
+        display: block;
+      }
+    }
+
+    .codingText {
+      display: block;
+    }
+  }
+}

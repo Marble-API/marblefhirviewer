@@ -1,0 +1,79 @@
+@import "../../variables.scss";
+
+.patient-card-wrap {
+  background-color: $primary-background;
+  color: $white;
+  padding: 0.25em 1em;
+  margin-top: 10px;
+  margin-bottom: 30px;
+  position: sticky;
+  z-index: 16;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.50);
+  border-radius: 12px;
+
+  .link,
+  .link:hover,
+  .link:visited,
+  .link:focus {
+    @extend %link-button;
+    color: $white;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    white-space: initial;
+
+    &.margin-fix {
+      margin: 0;
+    }
+  }
+
+  .patient-detail-link-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-top: 0.5em;
+  }
+
+  .patient-show-more-link-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    .is-hidden {
+      visibility: hidden;
+    }
+  }
+
+  .patient-more-contact {
+    padding-top: 15px;
+  }
+
+  .patient-info-wrap {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 2em 2em;
+
+    .patient-info-container {
+      .patient-name {
+        font-style: normal;
+        font-weight: 600;
+        font-size: 40px;
+      }
+
+      .label {
+        font-style: normal;
+        font-weight: 800;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+
+      .value {
+        font-style: normal;
+        font-weight: 500;
+        font-size: 16px;
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.drop-area {
+  width: 100%;
+  height: 250px;
+  border-radius: 25px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: dashed 1px #000;
+  flex-flow: column;
+  margin-top: 20px;
+
+  &.drag-over {
+    background-color: rgba(100, 149, 255, 0.2);
+  }
+
+  * {
+    pointer-events: none;
+  }
+}
+
+.drop-zone-container {
+  padding: 0 10px;
+}
