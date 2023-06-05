@@ -1,46 +1,64 @@
-# Getting Started with Create React App
+# Marble FHIR Viewer
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Marble FHIR Viewer provides the building blocks to display FHIR data in a human readable way.
 
-## Available Scripts
+## Getting Started
 
-In the project directory, you can run:
+1. Clone the project (or use Github Codespaces)
+2. Run `npm install`
+3. Run `npm start`
+4. Open [http://localhost:3000](http://localhost:3000) (or the mapped port from Gitbub Codespaces)
 
-### `npm start`
+## Viewing FHIR resources
+Marble FHIR Viewer supports json files with FHIR Resources. It was designed to visualize data for a single patient, however it will display any FHIR resources added to it.
+All processing and rendering happens on the front-end and no data is ever leaves the browser.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can load resources by loading:
+1. Multiple json files, each containing a FHIR resource.
+2. A zip file with multiple json files, each containing a FHIR resource.
+3. A FHIR Bundle with multiple resources
+4. `dataUris` query parameter which points to
+   1. A downloadable zip file (following the structure of item 2)
+   2. Urls can be | separated to load multiple zip files
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Extending FHIR viewer
+Marble FHIR Viewer facilitates rendering FHIR resources in a table format. 
+To extend the functionalities and customize how information is displayed, developers can update `DefaultTableColumnConfig.ts` to include new resources and customize how each resource renders.
 
-### `npm test`
+### Customizing Resources
+To customize an existing Resource, add a new object following `TableColumnConfig` interface.
+> You can find supported resources on `dataMapping/resources` folder
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `label` defines the column title
+- `getValue` defines how the value is accessed for that particular FHIR Resource.
+- `renderer` returns a JSX object to render complex values.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```TS
+const Medication: Array<TableColumnConfig> = [
+  {
+    label: "Codes",
+    getValue: (r) => getAllCodesAsString(r.code),
+    renderer: (r) => buildParagraphList(getAllCodeAsLinks(r.code)),
+  },
+  {
+    label: "Description",
+    getValue: (r) => getAllCodesAsString(r.code),
+    renderer: (r) => buildParagraphList(getAllDisplay(r.code)),
+  },
+];
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Adding support to new Resources
+To add new resources you can start by following steps above and create a new Resource Mapping.
+Once created, simply add it to `DefaultTableColumnConfig.ts` on `DefaultTableColumnConfig` object.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Supporting functions and mappings
+Marble FHIR Viewer contains some functions to help you display common FHIR data structures. Those methods are available on `functions/FhirFunctions.tsx`
 
-### `npm run eject`
+Additionally, `SystemCodes.ts` and `SystemCodesUrl.ts` contain mappings for common human readable system names and external websites that display further information about external codes.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Learn more
+[Marble APIs](https://www.marbleapi.com/)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+[FHIR Resources](http://hl7.org/fhir/R4/resourcelist.html)

@@ -1,4 +1,4 @@
-import CodeEnum from "../../enums/CodeEnum";
+import CodeEnum from "../enums/CodeEnum";
 
 const SystemCodesUrl: { [key: string]: string } = {
   [CodeEnum.npi]: "https://npiregistry.cms.hhs.gov/provider-view/",

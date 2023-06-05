@@ -1,4 +1,4 @@
-import CodeEnum from "../../enums/CodeEnum";
+import CodeEnum from "../enums/CodeEnum";
 
 const SystemCodes: { [key: string]: string } = {
   "http://snomed.info/sct": CodeEnum.snomed,

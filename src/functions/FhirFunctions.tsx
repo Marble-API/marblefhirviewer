@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
-import SystemCodes from "../data/Shared/SystemCodes";
-import SystemCodesUrl from "../data/Shared/SystemCodesUrl";
+import SystemCodesUrl from "../dataMapping/SystemCodesUrl";
 import UseEnum from "../enums/UseEnum";
 import {
   Address,
@@ -15,6 +14,7 @@ import {
   Ratio,
   Reference,
 } from "../interfaces";
+import SystemCodes from "../dataMapping/SystemCodes";
 
 const getCodeLabel = (
   code: CodeableConceptCode,
@@ -237,7 +237,7 @@ export const getAllCodeAsLinks = (
   code: CodeableConcept,
   includeDisplay: boolean = false
 ) => {
-  const codeLinks = code.coding.map((m) => {
+  const codeLinks = code?.coding?.map((m) => {
     const system = getSystem(m.system);
     const label = getCodeLabel(m, includeDisplay);
     const hasWebsite = SystemCodesUrl.hasOwnProperty(system);
@@ -246,7 +246,7 @@ export const getAllCodeAsLinks = (
     }
     return label;
   });
-  return codeLinks;
+  return codeLinks ?? [];
 };
 
 export const buildParagraphList = (

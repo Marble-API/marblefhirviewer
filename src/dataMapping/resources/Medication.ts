@@ -3,8 +3,8 @@ import {
   getAllCodeAsLinks,
   getAllCodesAsString,
   getAllDisplay,
-} from "../../../functions/FhirFunctions";
-import { TableColumnConfig } from "../../../interfaces";
+} from "../../functions/FhirFunctions";
+import { TableColumnConfig } from "../../interfaces";
 
 const Medication: Array<TableColumnConfig> = [
   {

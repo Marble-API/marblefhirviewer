@@ -5,9 +5,9 @@ import { FhirContext } from "../../contexts/FhirContext";
 import { ListBox } from "primereact/listbox";
 import "./ResourceViewContainer.scss";
 import {
-  DefaultTablesColumnsConfig,
-  ResourceTablesColumnsConfig,
-} from "../../data/ResourceView/ResourceTablesColumnsConfig";
+  UnmappedFhirResource,
+  DefaultTableColumnConfig,
+} from "../../dataMapping/DefaultTableColumnConfig";
 
 interface ResourceViewContainerProps {
   onOpenDetailViewClick: (data: any) => void;
@@ -52,8 +52,7 @@ const ResourceViewContainer = ({
         {resourceType && resourceType !== "" && (
           <ResourceTable
             columnsConfig={
-              ResourceTablesColumnsConfig[resourceType] ??
-              DefaultTablesColumnsConfig
+              DefaultTableColumnConfig[resourceType] ?? UnmappedFhirResource
             }
             resources={fhirResources.filter(
               (f) =>

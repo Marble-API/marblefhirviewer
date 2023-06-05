@@ -1,4 +1,4 @@
-import { TableColumnConfig } from "../../../interfaces";
+import { TableColumnConfig } from "../../interfaces";
 
 const Organization: Array<TableColumnConfig> = [
   {

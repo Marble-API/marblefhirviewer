@@ -1,6 +1,6 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { DropZone } from "../components";
-import FileTypes from "../data/Shared/FileTypes";
+import FileTypes from "../enums/FileTypes";
 import ResourceTypesEnum from "../enums/ResourceTypesEnum";
 import { readJsonFileAsync, unZipFile } from "../functions/Utils";
 import ExtendedFile from "../interfaces/ExtendedFile";

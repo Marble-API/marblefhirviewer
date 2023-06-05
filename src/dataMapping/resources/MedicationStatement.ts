@@ -3,8 +3,8 @@ import {
   formatDate,
   getAllCodeAsLinks,
   getReferenceLink,
-} from "../../../functions/FhirFunctions";
-import { TableColumnConfig } from "../../../interfaces";
+} from "../../functions/FhirFunctions";
+import { TableColumnConfig } from "../../interfaces";
 
 const MedicationStatement: Array<TableColumnConfig> = [
   {

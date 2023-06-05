@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import SystemCodes from "../data/Shared/SystemCodes";
+import SystemCodes from "../dataMapping/SystemCodes";
 import CodeEnum from "../enums/CodeEnum";
 import ExtendedFile from "../interfaces/ExtendedFile";
 

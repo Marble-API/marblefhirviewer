@@ -4,8 +4,8 @@ import {
   getAllCodeAsLinks,
   getAllCodesAsString,
   getValue,
-} from "../../../functions/FhirFunctions";
-import { TableColumnConfig } from "../../../interfaces";
+} from "../../functions/FhirFunctions";
+import { TableColumnConfig } from "../../interfaces";
 
 const Observation: Array<TableColumnConfig> = [
   {
