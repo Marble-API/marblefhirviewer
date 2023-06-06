@@ -10,6 +10,7 @@ import { Overlay, PatientCard, ResourceDetail } from "./components";
 import { ResourceViewContainer } from "./containers/ResourceViewContainer";
 import { FhirContext } from "./contexts/FhirContext";
 import { Layout } from "./ui/Layout";
+import { PrescriptionsViewContainer } from "./containers/PrescriptionsViewContainer";
 
 const App = () => {
   const {
@@ -52,6 +53,15 @@ const App = () => {
                 />
 
                 <Routes>
+                  {" "}
+                  <Route
+                    path="/Prescriptions"
+                    element={
+                      <PrescriptionsViewContainer
+                        onOpenDetailViewClick={onOpenDetailViewClickHandler}
+                      />
+                    }
+                  />
                   <Route
                     path="/Resources/:resourceType?"
                     element={

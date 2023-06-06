@@ -1,0 +1,15 @@
+@import "../../variables.scss";
+
+
+.viewer-wrapper {
+  display: flex;
+}
+
+.viewer-sidebar {
+  width: 230px;
+  margin-right: 5px;
+}
+
+.viewer-content {
+  flex: 1;
+}

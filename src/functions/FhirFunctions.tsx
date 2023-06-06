@@ -133,22 +133,60 @@ export const buildURL = (href: string, text: string) => (
   </a>
 );
 
+const splitReferenceFromUri = (referenceUri: string | null | undefined) => {
+  const referenceParts = referenceUri?.split("/");
+
+  if (!referenceParts || referenceParts.length < 2) {
+    return [undefined, undefined];
+  }
+
+  return [
+    referenceParts[referenceParts?.length - 2],
+    referenceParts[referenceParts?.length - 1],
+  ];
+};
+
+export const splitReference = (reference: Reference) => {
+  return splitReferenceFromUri(reference.reference);
+};
+
+export const findReferenceResourceFromUri = (
+  referenceUri: string | null | undefined,
+  allResources: FhirResource[] | null | undefined
+) => {
+  console.log(referenceUri);
+  const [resourceType, resourceId] = splitReferenceFromUri(referenceUri);
+
+  if (!resourceType) {
+    return undefined;
+  }
+
+  const matchingResource = allResources?.find(
+    // eslint-disable-next-line eqeqeq
+    (f) => f.resourceType === resourceType && f.id == resourceId
+  );
+
+  return matchingResource;
+};
+
+export const findReferenceResource = (
+  reference: Reference,
+  allResources: FhirResource[] | null | undefined
+) => {
+  return findReferenceResourceFromUri(reference.reference, allResources);
+};
+
 export const getReferenceLink = (
   reference: Reference,
   allResources: FhirResource[]
 ) => {
-  const referenceParts = reference.reference?.split("/");
+  const [resourceType, resourceId] = splitReference(reference);
 
-  if (!referenceParts || referenceParts.length < 2) {
+  if (!resourceType) {
     return `${reference.reference} ${reference.display}`;
   }
 
-  const resourceType = referenceParts[referenceParts?.length - 2];
-  const resourceId = referenceParts[referenceParts?.length - 1];
-  const matchingResource = allResources.find(
-    // eslint-disable-next-line eqeqeq
-    (f) => f.resourceType === resourceType && f.id == resourceId
-  );
+  const matchingResource = findReferenceResource(reference, allResources);
 
   if (matchingResource) {
     return (

@@ -4,10 +4,10 @@ export default interface TableColumnConfig {
   label: string;
   getValue: (
     resource: FhirResource,
-    allResources: FhirResource[] | undefined | null
+    additionalResources: FhirResource[] | undefined | null
   ) => string | number | undefined | null;
   renderer?: (
     resource: FhirResource,
-    allResources: FhirResource[]
+    additionalResources: FhirResource[]
   ) => JSX.Element | string | undefined | null;
 }
