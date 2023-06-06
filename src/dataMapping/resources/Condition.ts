@@ -8,7 +8,7 @@ import { TableColumnConfig } from "../../interfaces";
 const Condition: Array<TableColumnConfig> = [
   {
     label: "Code",
-    getValue: (r) => getAllCodesAsString(r.code),
+    getValue: (r) => getAllCodesAsString(r.code).join(", "),
     renderer: (r) => buildParagraphList(getAllCodeAsLinks(r.code, true)),
   },
 ];

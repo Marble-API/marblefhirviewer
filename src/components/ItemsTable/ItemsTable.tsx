@@ -1,38 +1,41 @@
-import { TableColumnConfig } from "../../interfaces";
+import { FhirResource } from "../../interfaces";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import "./ItemsTable.scss";
 import { Button } from "primereact/button";
 
 export interface TableProps {
-  columnsConfig: Array<TableColumnConfig>;
   items: Array<FlattenedRow>;
-  onDetailViewClick?: (data: any) => void;
+  columns: Array<string>;
+  onDetailViewClick?: (data: FlattenedRow) => void;
 }
 
 export interface FlattenedRow {
-  [key: string]: {
-    value: any;
-    body: string | JSX.Element | null | undefined;
-  };
+  rawData: FhirResource[];
+  [key: string]:
+    | {
+        value: string | number | null | undefined;
+        body: string | JSX.Element | null | undefined;
+      }
+    | FhirResource[];
 }
 
 const ItemsTable = ({
-  columnsConfig,
+  columns,
   items,
   onDetailViewClick: onOpenDetailViewClick,
 }: TableProps) => {
   const renderColumns = () => {
-    const columns: JSX.Element[] = [];
+    const columnsEl: JSX.Element[] = [];
 
-    columnsConfig.forEach((config, i) => {
-      const field = config.label.replace(/ /g, "");
-      columns.push(
+    columns.forEach((label, i) => {
+      const field = label.replace(/ /g, "");
+      columnsEl.push(
         <Column
           sortable
           key={"Column_" + i}
           field={`${field}.value`}
-          header={config.label}
+          header={label}
           body={(r) => {
             if (r?.hasOwnProperty(field)) {
               return r[field].body ?? r[field].value;
@@ -43,7 +46,7 @@ const ItemsTable = ({
       );
     });
 
-    columns.push(
+    columnsEl.push(
       <Column
         key={"Column_ActionButton"}
         header="Actions"
@@ -52,7 +55,7 @@ const ItemsTable = ({
       />
     );
 
-    return columns;
+    return columnsEl;
   };
 
   const renderActionButton = (props: any) => {

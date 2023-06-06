@@ -255,8 +255,8 @@ export const buildParagraphList = (
   <>
     {items
       .filter((f) => !!f)
-      .map((m) => (
-        <p>{m}</p>
+      .map((m, i) => (
+        <p key={i}>{m}</p>
       ))}
   </>
 );

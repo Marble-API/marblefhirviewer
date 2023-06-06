@@ -36,22 +36,22 @@ const ResourceViewContainer = ({
       allResources: Array<FhirResource>
     ) => {
       const rows = resources.map((resource) => {
-        const columns = columnsConfig.reduce<FlattenedRow>((prev, column) => {
-          const value = column.getValue(resource, allResources);
-          const body = column.renderer
-            ? column.renderer(resource, allResources)
-            : null;
-          prev[column.label.replace(/ /g, "")] = {
-            value,
-            body,
-          };
-          return prev;
-        }, {});
+        const columns = columnsConfig.reduce<FlattenedRow>(
+          (prev, column) => {
+            const value = column.getValue(resource, allResources);
+            const body = column.renderer
+              ? column.renderer(resource, allResources)
+              : null;
+            prev[column.label.replace(/ /g, "")] = {
+              value,
+              body,
+            };
+            return prev;
+          },
+          { rawData: [resource] }
+        );
 
-        return {
-          ...columns,
-          rawData: resource,
-        } as FlattenedRow & { rawData: FhirResource };
+        return columns;
       });
 
       setFlattenedRows(rows);
@@ -96,7 +96,7 @@ const ResourceViewContainer = ({
           (resourceType === "" && <p>Please select a Resource Type</p>)}
         {resourceType && resourceType !== "" && (
           <ItemsTable
-            columnsConfig={columnConfig}
+            columns={columnConfig.map((m) => m.label)}
             items={flattenedRows}
             onDetailViewClick={onOpenDetailViewClick}
           />

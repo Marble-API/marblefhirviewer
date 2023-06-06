@@ -14,11 +14,11 @@ const Observation: Array<TableColumnConfig> = [
   },
   {
     label: "Name",
-    getValue: (r) => getAllCodesAsString(r.code),
+    getValue: (r) => getAllCodesAsString(r.code).join(", "),
   },
   {
     label: "Codes",
-    getValue: (r) => getAllCodesAsString(r.code),
+    getValue: (r) => getAllCodesAsString(r.code).join(", "),
     renderer: (r) => buildParagraphList(getAllCodeAsLinks(r.code)),
   },
   {

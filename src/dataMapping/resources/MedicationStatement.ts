@@ -18,6 +18,13 @@ const MedicationStatement: Array<TableColumnConfig> = [
       const codeableConcept = r.medicationCodeableConcept
         ? getAllCodeAsLinks(r.medicationCodeableConcept)
         : [];
+      return [reference, ...codeableConcept].join(", ");
+    },
+    renderer: (r, a) => {
+      const reference = getReferenceLink(r.medicationReference, a ?? []);
+      const codeableConcept = r.medicationCodeableConcept
+        ? getAllCodeAsLinks(r.medicationCodeableConcept)
+        : [];
       return buildParagraphList([reference, ...codeableConcept]);
     },
   },

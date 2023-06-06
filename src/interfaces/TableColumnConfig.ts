@@ -5,7 +5,7 @@ export default interface TableColumnConfig {
   getValue: (
     resource: FhirResource,
     allResources: FhirResource[] | undefined | null
-  ) => any;
+  ) => string | number | undefined | null;
   renderer?: (
     resource: FhirResource,
     allResources: FhirResource[]
